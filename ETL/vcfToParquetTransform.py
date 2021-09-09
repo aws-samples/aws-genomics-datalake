@@ -11,11 +11,17 @@ from pyspark.sql import SparkSession
 import subprocess
 
 sample_id = str(sys.argv[1]).split(',')
+input_path = sys.argv[2]
+print (input_path)
+output_path = sys.argv[3]
+print (output_path)
+
 hl.init()
 spark = SparkSession.builder.getOrCreate()
 
 for i in sample_id:
-	filename = 's3://ab3/dev_input_vcf/' + i + '/' + i + '.hard-filtered.vcf.bgz'
+	#filename = input_path + i + '/' + i + '.hard-filtered.vcf.bgz'
+	filename = input_path + '/' + i
 	#if "additional_698_related" in filename:
 	#	continue
 	#else:
@@ -32,4 +38,4 @@ for i in sample_id:
 	v_spark = v_spark.withColumnRenamed("locus.contig","chrom").withColumnRenamed("locus.position","pos")
 	v_spark.createOrReplaceTempView("variant_v")
 	df=spark.sql("SELECT concat(chrom, ':', ref, ':', alt, ':', cast(pos as string)) as variant_id,* FROM variant_v where length(chrom)<6")
-	df.write.parquet('s3://ab3/dev_output_parquet_test/'+sample_id+'/')
+	df.write.parquet(output_path + sample_id +'/')

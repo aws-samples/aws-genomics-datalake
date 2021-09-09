@@ -8,9 +8,12 @@ paginator = boto3.client('s3').get_paginator('list_objects_v2')
 def lambda_handler(event, context):
 	key = event['Records'][0]['s3']['object']['key']
 	if 'SUCCESS' in key:
-    # list all vcfs by paginating
-# output=2500
-		output = subprocess.getoutput('/opt/aws s3 ls ab3/dev_input_vcf/ | wc -l')
+		cntPages=paginator.paginate(Bucket='ab3',Prefix='dev_input_vcf/',MaxKeys=999)
+		output=0
+		for pagec in cntPages:
+			for obj in pagec['Contents']:
+				if 'bgz' in str(obj['Key']):
+					output=output+1
 		cluster_name='hailtest'
 		emr_log_location='s3n://coviddatasalaunch/elasticmapreduce/'
 		master_instance_type='m5.xlarge'
