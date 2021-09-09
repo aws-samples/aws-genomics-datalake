@@ -1,0 +1,497 @@
+{
+  "Description": "AWS Data Lake as Code Registry of Open Data Federated Thousand Genomes DRAGEN Template. (ib-jkv84kv85b)",
+  "Resources": {
+    "thousandgenomesdragenthousandgenomesdragendl7ED38E00": {
+      "Type": "AWS::Glue::Database",
+      "Properties": {
+        "CatalogId": {
+          "Ref": "AWS::AccountId"
+        },
+        "DatabaseInput": {
+          "LocationUri": "s3://aws-roda-hcls-datalake/thousandgenomes_dragen/",
+          "Name": "thousandgenomes_dragen_dl-awsroda"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ThousandGenomesDragenTemplate/thousandgenomes_dragen/thousandgenomes_dragen_dl/Resource"
+      }
+    },
+    "thousandgenomesdragenvarnested88A75F22": {
+      "Type": "AWS::Glue::Table",
+      "Properties": {
+        "CatalogId": {
+          "Ref": "AWS::AccountId"
+        },
+        "DatabaseName": {
+          "Ref": "thousandgenomesdragenthousandgenomesdragendl7ED38E00"
+        },
+        "TableInput": {
+          "Name": "var_nested",
+          "Parameters": {
+            "EXTERNAL": "TRUE",
+            "transient_lastDdlTime": "1629999722"
+          },
+          "StorageDescriptor": {
+            "Columns": [
+              {
+                "Name": "variant_id",
+                "Type": "string"
+              },
+              {
+                "Name": "pos",
+                "Type": "int"
+              },
+              {
+                "Name": "ref",
+                "Type": "string"
+              },
+              {
+                "Name": "alt",
+                "Type": "string"
+              },
+              {
+                "Name": "samples",
+                "Type": "array<struct<id:string,gts:array<int>>>"
+              }
+            ],
+            "InputFormat": "org.apache.hadoop.hive.ql.io.orc.OrcInputFormat",
+            "Location": "s3://juayu-sampledata/geno_dataset/var_nested",
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat",
+            "Parameters": {},
+            "SerdeInfo": {
+              "Parameters": {
+                "serialization.format": "1"
+              },
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.orc.OrcSerde"
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ThousandGenomesDragenTemplate/thousandgenomes_dragen/var_nested"
+      }
+    },
+    "thousandgenomesdragenvarpartbychrom3E1ADBC9": {
+      "Type": "AWS::Glue::Table",
+      "Properties": {
+        "CatalogId": {
+          "Ref": "AWS::AccountId"
+        },
+        "DatabaseName": {
+          "Ref": "thousandgenomesdragenthousandgenomesdragendl7ED38E00"
+        },
+        "TableInput": {
+          "Name": "var_partby_chrom",
+          "Parameters": {
+            "CrawlerSchemaDeserializerVersion": "1.0",
+            "CrawlerSchemaSerializerVersion": "1.0",
+            "UPDATED_BY_CRAWLER": "thousandgenomes_dragen_dl_crawler",
+            "averageRecordSize": "45",
+            "classification": "orc",
+            "compressionType": "none",
+            "objectCount": "4106",
+            "recordCount": "222728",
+            "sizeKey": "11097414",
+            "typeOfData": "file"
+          },
+          "StorageDescriptor": {
+            "Columns": [
+              {
+                "Name": "variant_id",
+                "Type": "string"
+              },
+              {
+                "Name": "pos",
+                "Type": "int"
+              },
+              {
+                "Name": "ref",
+                "Type": "string"
+              },
+              {
+                "Name": "alt",
+                "Type": "string"
+              },
+              {
+                "Name": "sample_id",
+                "Type": "string"
+              },
+              {
+                "Name": "alleles",
+                "Type": "array<string>"
+              },
+              {
+                "Name": "rsid",
+                "Type": "string"
+              },
+              {
+                "Name": "qual",
+                "Type": "double"
+              },
+              {
+                "Name": "filters",
+                "Type": "array<string>"
+              },
+              {
+                "Name": "info.ac",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "info.af",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "info.an",
+                "Type": "int"
+              },
+              {
+                "Name": "info.db",
+                "Type": "boolean"
+              },
+              {
+                "Name": "info.dp",
+                "Type": "int"
+              },
+              {
+                "Name": "info.end",
+                "Type": "int"
+              },
+              {
+                "Name": "info.fs",
+                "Type": "double"
+              },
+              {
+                "Name": "info.fractioninformativereads",
+                "Type": "double"
+              },
+              {
+                "Name": "info.lod",
+                "Type": "double"
+              },
+              {
+                "Name": "info.mq",
+                "Type": "double"
+              },
+              {
+                "Name": "info.mqranksum",
+                "Type": "double"
+              },
+              {
+                "Name": "info.qd",
+                "Type": "double"
+              },
+              {
+                "Name": "info.r2_5p_bias",
+                "Type": "double"
+              },
+              {
+                "Name": "info.readposranksum",
+                "Type": "double"
+              },
+              {
+                "Name": "info.sor",
+                "Type": "double"
+              },
+              {
+                "Name": "ad",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "af",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "dp",
+                "Type": "int"
+              },
+              {
+                "Name": "fir2",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "f2r1",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "gp",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "gq",
+                "Type": "int"
+              },
+              {
+                "Name": "gt.alleles",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "gt.phased",
+                "Type": "boolean"
+              },
+              {
+                "Name": "mb",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "pl",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "pri",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "ps",
+                "Type": "int"
+              },
+              {
+                "Name": "sb",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "sq",
+                "Type": "double"
+              }
+            ],
+            "InputFormat": "org.apache.hadoop.hive.ql.io.orc.OrcInputFormat",
+            "Location": "s3://aws-roda-hcls-datalake/thousandgenomes_dragen/var_partby_chrom/",
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat",
+            "Parameters": {
+              "CrawlerSchemaDeserializerVersion": "1.0",
+              "CrawlerSchemaSerializerVersion": "1.0",
+              "UPDATED_BY_CRAWLER": "thousandgenomes_dragen_dl_crawler",
+              "averageRecordSize": "45",
+              "classification": "orc",
+              "compressionType": "none",
+              "objectCount": "4106",
+              "recordCount": "222728",
+              "sizeKey": "11097414",
+              "typeOfData": "file"
+            },
+            "SerdeInfo": {
+              "Parameters": {},
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.orc.OrcSerde"
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ThousandGenomesDragenTemplate/thousandgenomes_dragen/var_partby_chrom"
+      }
+    },
+    "thousandgenomesdragenvarpartbysamples56B36EF8": {
+      "Type": "AWS::Glue::Table",
+      "Properties": {
+        "CatalogId": {
+          "Ref": "AWS::AccountId"
+        },
+        "DatabaseName": {
+          "Ref": "thousandgenomesdragenthousandgenomesdragendl7ED38E00"
+        },
+        "TableInput": {
+          "Name": "var_partby_samples",
+          "Parameters": {
+            "CrawlerSchemaDeserializerVersion": "1.0",
+            "CrawlerSchemaSerializerVersion": "1.0",
+            "UPDATED_BY_CRAWLER": "thousandgenomes_dragen_dl_crawler",
+            "averageRecordSize": "85",
+            "classification": "parquet",
+            "compressionType": "none",
+            "objectCount": "26580",
+            "recordCount": "16940619874",
+            "sizeKey": "1012507572996",
+            "typeOfData": "file"
+          },
+          "StorageDescriptor": {
+            "Columns": [
+              {
+                "Name": "variant_id",
+                "Type": "string"
+              },
+              {
+                "Name": "chrom",
+                "Type": "string"
+              },
+              {
+                "Name": "pos",
+                "Type": "int"
+              },
+              {
+                "Name": "alleles",
+                "Type": "array<string>"
+              },
+              {
+                "Name": "rsid",
+                "Type": "string"
+              },
+              {
+                "Name": "qual",
+                "Type": "double"
+              },
+              {
+                "Name": "filters",
+                "Type": "array<string>"
+              },
+              {
+                "Name": "info.ac",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "info.af",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "info.an",
+                "Type": "int"
+              },
+              {
+                "Name": "info.db",
+                "Type": "boolean"
+              },
+              {
+                "Name": "info.dp",
+                "Type": "int"
+              },
+              {
+                "Name": "info.end",
+                "Type": "int"
+              },
+              {
+                "Name": "info.fs",
+                "Type": "double"
+              },
+              {
+                "Name": "info.fractioninformativereads",
+                "Type": "double"
+              },
+              {
+                "Name": "info.lod",
+                "Type": "double"
+              },
+              {
+                "Name": "info.mq",
+                "Type": "double"
+              },
+              {
+                "Name": "info.mqranksum",
+                "Type": "double"
+              },
+              {
+                "Name": "info.qd",
+                "Type": "double"
+              },
+              {
+                "Name": "info.r2_5p_bias",
+                "Type": "double"
+              },
+              {
+                "Name": "info.readposranksum",
+                "Type": "double"
+              },
+              {
+                "Name": "info.sor",
+                "Type": "double"
+              },
+              {
+                "Name": "ad",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "af",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "dp",
+                "Type": "int"
+              },
+              {
+                "Name": "fir2",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "f2r1",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "gp",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "gq",
+                "Type": "int"
+              },
+              {
+                "Name": "gt.alleles",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "gt.phased",
+                "Type": "boolean"
+              },
+              {
+                "Name": "mb",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "pl",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "pri",
+                "Type": "array<double>"
+              },
+              {
+                "Name": "ps",
+                "Type": "int"
+              },
+              {
+                "Name": "sb",
+                "Type": "array<int>"
+              },
+              {
+                "Name": "sq",
+                "Type": "double"
+              },
+              {
+                "Name": "sample_id",
+                "Type": "string"
+              },
+              {
+                "Name": "ref",
+                "Type": "string"
+              },
+              {
+                "Name": "alt",
+                "Type": "string"
+              }
+            ],
+            "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+            "Location": "s3://aws-roda-hcls-datalake/thousandgenomes_dragen/var_partby_samples/",
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+            "Parameters": {
+              "CrawlerSchemaDeserializerVersion": "1.0",
+              "CrawlerSchemaSerializerVersion": "1.0",
+              "UPDATED_BY_CRAWLER": "thousandgenomes_dragen_dl_crawler",
+              "averageRecordSize": "85",
+              "classification": "parquet",
+              "compressionType": "none",
+              "objectCount": "26580",
+              "recordCount": "16940619874",
+              "sizeKey": "1012507572996",
+              "typeOfData": "file"
+            },
+            "SerdeInfo": {
+              "Parameters": {
+                "serialization.format": "1"
+              },
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ThousandGenomesDragenTemplate/thousandgenomes_dragen/var_partby_samples"
+      }
+    }
+  }
+}
