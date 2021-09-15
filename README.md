@@ -16,4 +16,4 @@ This repo contains the code referenced in the AWS blog post "Build a Genomics da
 
 #### 1000Genomes.ipynb - Python notebook with sample queries
 
-**This repo also has the CloudFormation Templates to create Glue Data Catalog entries for the transformed 1000 genomes and gnomAD data. For more details on this, check out the DataLakeAsCode repo at https://github.com/aws-samples/data-lake-as-code/tree/roda#readme
+**This repo also has the CloudFormation Templates to create Glue Data Catalog entries for the transformed 1000 genomes and gnomAD data. For more details on this, check out the DataLakeAsCode repo at https://github.com/aws-samples/data-lake-as-code/tree/roda#readme**
