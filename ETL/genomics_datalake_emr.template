@@ -16,12 +16,11 @@ Parameters:
   OutputS3Path:
     Description: "S3 path where output samples are written in parquet format after pre-processing from EMR "
     Type: String
-    Default: s3://ab3raw/genomicsOutput/
 
   HailScriptPath:
     Description: "(Optional) S3 path to pyspark script to be used to covert VCF files into parquet format. Leave default to use the existing pyspark script to convert VCF files to parquet." 
     Type: String
-    Default: s3://ab3raw/convert_vcf_s3_filteredout.py
+    Default: s3://redshift-demos/genomics/vcfToParquetTransform.py
 
   HailBucketName:
     Description: "S3 bucket name in your account to store EMR logs"
@@ -36,7 +35,7 @@ Parameters:
   EMRConfigs:
     Description: "S3 Bucket path containing custom configurations for EMR cluster to pre-process sample files (leave as default if you do not have specific requirements to configure EMR). See https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-configure-apps.html"
     Type: String
-    Default: s3://ab3raw/config.json
+    Default: s3://redshift-demos/genomics/emr_config.json
 
   EmrMasterInstanceSize:
     AllowedValues:
@@ -495,7 +494,8 @@ Resources:
             - '      params='''''
             - '      for page in pages:'
             - '         for obj in page[''Contents'']:'
-            - '             params=params+str(obj[''Key'']).split("/")[1]+","'
+            - '             if "bgz" in str(obj["Key"]):'
+            - '             	params=params+str(obj[''Key'']).split("/")[-1]+","'
             - "         params=params[:-1]"
             - "         print(params)"
             - "         cluster_id=boto3.client('emr').run_job_flow(Name=cluster_name,LogUri=f's3://{hail_bucket}/elasticmapreduce/',ReleaseLabel='emr-5.29.0', BootstrapActions=[{'Name':'pythonDateutilReinstall','ScriptBootstrapAction':{'Path':'file:/usr/bin/sudo','Args':['python3','-m','pip','install','-I','python-dateutil']}}], Instances={'InstanceGroups':[{'Name':'Master Instance Group','Market':'ON_DEMAND','InstanceRole':'MASTER','InstanceType':master_type,'InstanceCount':1, 'EbsConfiguration':{'EbsBlockDeviceConfigs':[{  'VolumeSpecification':{  'VolumeType':'gp2', 'SizeInGB':32 }, 'VolumesPerInstance':2 }]}}, {'Name':'Core Instance Group','Market':'ON_DEMAND','InstanceRole':'CORE','InstanceType':core_type,'InstanceCount':int(core_count),'EbsConfiguration':{'EbsBlockDeviceConfigs':[{  'VolumeSpecification':{  'VolumeType':'gp2', 'SizeInGB':1500 }, 'VolumesPerInstance':1 }]}},{'Name':'Task Instance Group','Market':'ON_DEMAND','InstanceRole':'TASK','InstanceType':task_type,'InstanceCount':int(task_count),'EbsConfiguration':{'EbsBlockDeviceConfigs':[{  'VolumeSpecification':{  'VolumeType':'gp2', 'SizeInGB':1500 }, 'VolumesPerInstance':1 }]}}],'KeepJobFlowAliveWhenNoSteps':False,'Ec2SubnetId':subnetid}, Applications=[{'Name':'Ganglia'},{'Name':'Hadoop'},{'Name':'Hive'},{'Name':'Livy'},{'Name':'Spark'}],Configurations=jsonObject,ServiceRole=service_role,VisibleToAllUsers=True,JobFlowRole=emr_ec2, Tags=[{'Key':'owner','Value':''},{'Key':'environment','Value':'development'},{'Key':'allow-emr-ssm','Value':'false'},{'Key':'Name','Value':'hailtest'},], Steps=[ {'Name':'hailApachePlotDir','ActionOnFailure':'CONTINUE','HadoopJarStep':{'Jar':'command-runner.jar','Args':['sudo','mkdir','-p','/var/www/html/plots']}},{'Name':'hailMainPlotDir','ActionOnFailure':'CONTINUE','HadoopJarStep':{'Jar':'command-runner.jar','Args':['sudo','ln','-s','/var/www/html/plots','/plots']}}, {'Name':'hailLivyPlotOwnership','ActionOnFailure':'CONTINUE','HadoopJarStep':{'Jar':'command-runner.jar','Args':['sudo','chown','livy:livy','/var/www/html/plots']}}, {'Name':'vepOwnership','ActionOnFailure':'CONTINUE','HadoopJarStep':{'Jar':'command-runner.jar','Args':['sudo','bash','-c','if test -d /opt/vep/; then chown -R hadoop:hadoop /opt/vep; fi']}}, {'Name':'clusterManifestToS3','ActionOnFailure':'CONTINUE','HadoopJarStep':{'Jar':'command-runner.jar','Args':['/usr/local/bin/cluster_manifest.sh']}}, {'Name':'Spark Application','ActionOnFailure':'CONTINUE','HadoopJarStep':{'Jar':'command-runner.jar','Args':['spark-submit','--conf','spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version=2','--conf','spark.sql.parquet.filterPushdown=true','--conf','spark.sql.parquet.fs.optimized.committer.optimization-enabled=true','--conf','spark.sql.catalogImplementation=hive','--conf','spark.executor.cores=1','--conf','spark.executor.instances=1','--conf','spark.sql.shuffle.partitions=1000','--conf','spark.executor.memory=10g','--jars','/opt/hail/hail-all-spark.jar',s3_script_path,params,input_s3,output_s3]}}], AutoScalingRole=autoscaling_role,ScaleDownBehavior='TERMINATE_AT_TASK_COMPLETION',CustomAmiId=customAmiId,EbsRootVolumeSize=100)"
@@ -698,7 +698,7 @@ Resources:
       Path: "/"
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole"
-      RoleName: "emr-cluster-EMRHail11"
+      RoleName: "emr-cluster-EMRHail17"
 
   emrec2HailEMR:
     Type: "AWS::IAM::Role"
@@ -730,7 +730,7 @@ Resources:
               - Effect: "Allow"
                 Action: "cloudformation:DescribeStacks"
                 Resource: !Ref "AWS::StackId"
-      RoleName: 'emr-ec2-EMRHail11'
+      RoleName: 'emr-ec2-EMRHail17'
 
   emrautoscalingHailEMR:
     Type: 'AWS::IAM::Role'
@@ -748,7 +748,7 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforAutoScalingRole'
-      RoleName: 'emr-autoscaling-EMRHail11'
+      RoleName: 'emr-autoscaling-EMRHail17'
 
   instanceProfileEmrEc2:
     Type: "AWS::IAM::InstanceProfile"
