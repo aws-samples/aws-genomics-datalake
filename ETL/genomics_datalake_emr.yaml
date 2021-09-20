@@ -15,14 +15,14 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Description: >-
-  This is a cludformation template to perform  pre-processing of VCF temples on
+  This is a cloudformation template to perform  pre-processing of VCF temples on
   EMR for genomics analysis
 
 Parameters:
   InputS3Path:
     Description: "Input S3 path containing the VCF (sample) files in .bgz compressed format or uncompressed format"
     Type: String
-    Default: s3://mgb-genomics-poc/1kg_vcfs/
+    Default: s3://redshift-demos/genomics/sample_vcfs/
 
   SamplesPerCluster:
     Description: "Number of VCF files (Samples) that needs to be processed per EMR cluster. Based on this value number of EMR clusters would be launched (=total number of Samples/Samples per cluster)"
@@ -41,7 +41,6 @@ Parameters:
   HailBucketName:
     Description: "S3 bucket name in your account to store EMR logs"
     Type: String
-    Default: hailbucket1
 
   EMRClusterName:
     Description: "EMR Cluster name with hail installed to pre-process samples"
